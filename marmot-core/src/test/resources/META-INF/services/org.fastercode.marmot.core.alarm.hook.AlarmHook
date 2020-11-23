@@ -1,0 +1,3 @@
+org.fastercode.marmot.core.alarm.SPIAlarmHookB
+org.fastercode.marmot.core.alarm.SPIAlarmHookA
+org.fastercode.marmot.core.alarm.SPIAlarmHookC

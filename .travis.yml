@@ -1,0 +1,27 @@
+language: java
+sudo: false # faster builds
+
+env:
+  - CODECOV_TOKEN="1f7e4e8a-a8ac-4df7-b4d7-592e855b1ed9"
+
+jdk:
+  - oraclejdk12
+  - openjdk11
+  - oraclejdk11
+  - openjdk8
+
+cache:
+  directories:
+    - $HOME/.m2
+
+install: true
+
+script:
+  - travis_wait 30 mvn clean install -DskipTests=false -Dcheckstyle.skip=true -Dmaven.javadoc.skip=true
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
+
+branches:
+  only:
+    - master
