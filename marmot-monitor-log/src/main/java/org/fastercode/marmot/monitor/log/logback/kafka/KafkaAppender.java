@@ -36,13 +36,18 @@ public class KafkaAppender<E> extends KafkaAppenderConfig<E> {
     };
 
     public KafkaAppender() {
+        // https://kafka.apache.org/documentation.html#newproducerconfigs
         addProducerConfigValue(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, ByteArraySerializer.class.getName());
         addProducerConfigValue(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, ByteArraySerializer.class.getName());
         addProducerConfigValue(ProducerConfig.ACKS_CONFIG, "0");
         addProducerConfigValue(ProducerConfig.RETRIES_CONFIG, "0");
         addProducerConfigValue(ProducerConfig.LINGER_MS_CONFIG, "1000");
         addProducerConfigValue(ProducerConfig.REQUEST_TIMEOUT_MS_CONFIG, "3000");
+
         addProducerConfigValue(ProducerConfig.MAX_BLOCK_MS_CONFIG, "0");
+        addProducerConfigValue(ProducerConfig.METADATA_MAX_AGE_CONFIG, "300000");
+        addProducerConfigValue(ProducerConfig.METADATA_MAX_IDLE_CONFIG, "300000");
+
         this.setDeliveryStrategy(new AsynchronousDeliveryStrategy());
         this.setKeyingStrategy(new NoKeyKeyingStrategy());
     }

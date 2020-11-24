@@ -20,6 +20,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.ArgumentMatchers;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
 
@@ -29,6 +31,7 @@ import static org.mockito.Mockito.*;
 
 @Slf4j
 public class KafkaAppenderTest {
+    private static final Logger logKafka = LoggerFactory.getLogger("SEND-TO-KAFKA");
 
     private final KafkaAppender<ILoggingEvent> appender = new KafkaAppender<>();
     private final LoggerContext ctx = new LoggerContext();
@@ -46,7 +49,7 @@ public class KafkaAppenderTest {
         appender.setName("kafkaAppenderBase");
         appender.setEncoder(encoder);
         appender.setTopic("topic");
-        appender.addProducerConfig("bootstrap.servers=localhost:1234");
+        appender.addProducerConfig("bootstrap.servers=vm-kafka:9092");
         appender.setKeyingStrategy(keyingStrategy);
         appender.setDeliveryStrategy(deliveryStrategy);
         ctx.start();
@@ -59,16 +62,30 @@ public class KafkaAppenderTest {
     }
 
     @Test
-    public void test() {
+    public void testLogSend() {
+        for (int i = 0; i < 1000; i++) {
+            logKafka.info("test-{}", i);
+        }
+    }
+
+    @Test
+    public void testSend() {
         appender.setTopic("test-topic");
         appender.start();
         byte[] key = null;
-        byte[] value = null;
+        byte[] value = "test".getBytes();
         final ProducerRecord<byte[], byte[]> msg = new ProducerRecord<>("test-topic", null, null, key, value);
         Producer<byte[], byte[]> producer = appender.getLazyProducer().get();
         appender.setDeliveryStrategy(new AsynchronousDeliveryStrategy());
         DeliveryStrategy deliveryStrategy = appender.getDeliveryStrategy();
-        deliveryStrategy.send(producer, msg, null, null);
+        for (int i = 0; i < 1000; i++) {
+            deliveryStrategy.send(producer, msg, null, new FailedDeliveryCallback<Object>() {
+                @Override
+                public void onFailedDelivery(Object evt, Throwable throwable) {
+                    log.warn("\ntest - warn: {}", throwable.getMessage());
+                }
+            });
+        }
     }
 
     @Test

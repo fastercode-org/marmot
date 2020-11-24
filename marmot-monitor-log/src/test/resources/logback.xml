@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <configuration debug="false">
+    <appender name="KAFKA" class="org.fastercode.marmot.monitor.log.logback.kafka.KafkaAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+        <topic>test-topic</topic>
+        <producerConfig>bootstrap.servers=vm-kafka:9092</producerConfig>
+        <producerConfig>acks=0</producerConfig>
+        <producerConfig>linger.ms=1000</producerConfig>
+        <producerConfig>max.block.ms=0</producerConfig>
+        <producerConfig>client.id=${HOSTNAME}-${CONTEXT_NAME}-logback-relaxed</producerConfig>
+    </appender>
 
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
@@ -13,9 +24,7 @@
 
     <root level="DEBUG">
         <appender-ref ref="STDOUT" />
+        <appender-ref ref="KAFKA" />
     </root>
-
-    <logger name="org.fastercode" level="DEBUG" addtivity="false">
-    </logger>
 
 </configuration>
