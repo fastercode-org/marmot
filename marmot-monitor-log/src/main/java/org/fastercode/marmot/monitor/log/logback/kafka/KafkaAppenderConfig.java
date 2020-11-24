@@ -42,7 +42,7 @@ public abstract class KafkaAppenderConfig<E> extends UnsynchronizedAppenderBase<
     protected boolean appendTimestamp = true;
 
     @Getter
-    protected Map<String, Object> producerConfig = new HashMap<String, Object>();
+    protected Map<String, Object> producerConfig = new HashMap<>();
 
     public void addProducerConfig(String keyValue) {
         String[] split = keyValue.split("=", 2);

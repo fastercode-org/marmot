@@ -3,9 +3,6 @@ package org.fastercode.marmot.monitor.log.logback.kafka.delivery;
 import org.apache.kafka.clients.producer.*;
 import org.apache.kafka.common.errors.TimeoutException;
 
-/**
- * @since 0.0.1
- */
 public class AsynchronousDeliveryStrategy implements DeliveryStrategy {
 
     @Override
