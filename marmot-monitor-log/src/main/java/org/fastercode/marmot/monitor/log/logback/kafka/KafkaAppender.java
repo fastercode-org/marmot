@@ -56,7 +56,7 @@ public class KafkaAppender<E> extends KafkaAppenderConfig<E> {
 
         final Producer<byte[], byte[]> producer = lazyProducer.get();
         if (producer != null) {
-            deliveryStrategy.send(lazyProducer.get(), record, e, failedDeliveryCallback);
+            deliveryStrategy.send(producer, record, e, failedDeliveryCallback);
         } else {
             failedDeliveryCallback.onFailedDelivery(e, null);
         }
