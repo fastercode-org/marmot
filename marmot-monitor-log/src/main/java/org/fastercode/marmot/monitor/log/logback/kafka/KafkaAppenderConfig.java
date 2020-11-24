@@ -3,6 +3,8 @@ package org.fastercode.marmot.monitor.log.logback.kafka;
 import ch.qos.logback.core.UnsynchronizedAppenderBase;
 import ch.qos.logback.core.encoder.Encoder;
 import ch.qos.logback.core.spi.AppenderAttachable;
+import lombok.Getter;
+import lombok.Setter;
 import org.fastercode.marmot.monitor.log.logback.kafka.delivery.AsynchronousDeliveryStrategy;
 import org.fastercode.marmot.monitor.log.logback.kafka.delivery.DeliveryStrategy;
 import org.fastercode.marmot.monitor.log.logback.kafka.keying.KeyingStrategy;
@@ -15,17 +17,42 @@ import static org.apache.kafka.clients.producer.ProducerConfig.BOOTSTRAP_SERVERS
 
 public abstract class KafkaAppenderConfig<E> extends UnsynchronizedAppenderBase<E> implements AppenderAttachable<E> {
 
+    @Setter
+    @Getter
     protected String topic = null;
 
+    @Setter
+    @Getter
     protected Encoder<E> encoder = null;
-    protected KeyingStrategy<? super E> keyingStrategy = null;
-    protected DeliveryStrategy deliveryStrategy;
 
+    @Setter
+    @Getter
+    protected KeyingStrategy<? super E> keyingStrategy = null;
+
+    @Setter
+    @Getter
+    protected DeliveryStrategy deliveryStrategy = null;
+
+    @Setter
+    @Getter
     protected Integer partition = null;
 
+    @Setter
+    @Getter
     protected boolean appendTimestamp = true;
 
+    @Getter
     protected Map<String, Object> producerConfig = new HashMap<String, Object>();
+
+    public void addProducerConfig(String keyValue) {
+        String[] split = keyValue.split("=", 2);
+        if (split.length == 2)
+            addProducerConfigValue(split[0], split[1]);
+    }
+
+    public void addProducerConfigValue(String key, Object value) {
+        this.producerConfig.put(key, value);
+    }
 
     protected boolean checkPrerequisites() {
         boolean errorFree = true;
@@ -57,48 +84,6 @@ public abstract class KafkaAppenderConfig<E> extends UnsynchronizedAppenderBase<
         }
 
         return errorFree;
-    }
-
-    public void setEncoder(Encoder<E> encoder) {
-        this.encoder = encoder;
-    }
-
-    public void setTopic(String topic) {
-        this.topic = topic;
-    }
-
-    public void setKeyingStrategy(KeyingStrategy<? super E> keyingStrategy) {
-        this.keyingStrategy = keyingStrategy;
-    }
-
-    public void addProducerConfig(String keyValue) {
-        String[] split = keyValue.split("=", 2);
-        if (split.length == 2)
-            addProducerConfigValue(split[0], split[1]);
-    }
-
-    public void addProducerConfigValue(String key, Object value) {
-        this.producerConfig.put(key, value);
-    }
-
-    public Map<String, Object> getProducerConfig() {
-        return producerConfig;
-    }
-
-    public void setDeliveryStrategy(DeliveryStrategy deliveryStrategy) {
-        this.deliveryStrategy = deliveryStrategy;
-    }
-
-    public void setPartition(Integer partition) {
-        this.partition = partition;
-    }
-
-    public boolean isAppendTimestamp() {
-        return appendTimestamp;
-    }
-
-    public void setAppendTimestamp(boolean appendTimestamp) {
-        this.appendTimestamp = appendTimestamp;
     }
 
 }
