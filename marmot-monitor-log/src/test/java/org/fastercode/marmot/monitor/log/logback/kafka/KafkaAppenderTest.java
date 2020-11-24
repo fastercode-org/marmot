@@ -8,7 +8,10 @@ import ch.qos.logback.core.BasicStatusManager;
 import ch.qos.logback.core.encoder.Encoder;
 import ch.qos.logback.core.status.ErrorStatus;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.kafka.clients.producer.*;
+import org.apache.kafka.clients.producer.KafkaProducer;
+import org.apache.kafka.clients.producer.Producer;
+import org.apache.kafka.clients.producer.ProducerRecord;
+import org.fastercode.marmot.monitor.log.logback.kafka.delivery.AsynchronousDeliveryStrategy;
 import org.fastercode.marmot.monitor.log.logback.kafka.delivery.DeliveryStrategy;
 import org.fastercode.marmot.monitor.log.logback.kafka.delivery.FailedDeliveryCallback;
 import org.fastercode.marmot.monitor.log.logback.kafka.keying.KeyingStrategy;
@@ -65,6 +68,7 @@ public class KafkaAppenderTest {
         byte[] value = null;
         final ProducerRecord<byte[], byte[]> msg = new ProducerRecord<>("test-topic", null, null, key, value);
         Producer<byte[], byte[]> producer = appender.getLazyProducer().get();
+        appender.setDeliveryStrategy(new AsynchronousDeliveryStrategy());
         DeliveryStrategy deliveryStrategy = appender.getDeliveryStrategy();
         deliveryStrategy.send(producer, msg, null, null);
     }
