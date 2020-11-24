@@ -62,8 +62,6 @@ public class KafkaAppenderTest {
     public void test() {
         appender.setTopic("test-topic");
         appender.start();
-//        final LoggingEvent evt = new LoggingEvent("fqcn", ctx.getLogger("logger"), Level.ALL, "message", null, new Object[0]);
-//        appender.append(evt);
         byte[] key = null;
         byte[] value = null;
         final ProducerRecord<byte[], byte[]> msg = new ProducerRecord<>("test-topic", null, null, key, value);
