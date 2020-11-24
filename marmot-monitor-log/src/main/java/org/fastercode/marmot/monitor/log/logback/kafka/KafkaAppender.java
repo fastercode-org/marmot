@@ -6,23 +6,21 @@ import ch.qos.logback.core.spi.AppenderAttachableImpl;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerConfig;
+import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.common.KafkaException;
 import org.apache.kafka.common.serialization.ByteArraySerializer;
 import org.fastercode.marmot.monitor.log.logback.kafka.delivery.FailedDeliveryCallback;
 
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.locks.ReentrantLock;
 
-/**
- * @author huyaolong
- */
 public class KafkaAppender<E> extends KafkaAppenderConfig<E> {
     private static final String LOGGER_PREFIX = KafkaAppender.class.getPackage().getName();
     private static final String KAFKA_LOGGER_PREFIX = KafkaProducer.class.getPackage().getName().replaceFirst("\\.producer$", "");
 
     private final AtomicBoolean start = new AtomicBoolean(false);
-    protected final ReentrantLock lock = new ReentrantLock(false);
+    private LazyProducer lazyProducer = null;
 
     private final AppenderAttachableImpl<E> aai = new AppenderAttachableImpl<E>();
     private final FailedDeliveryCallback<E> failedDeliveryCallback = new FailedDeliveryCallback<E>() {
@@ -49,66 +47,57 @@ public class KafkaAppender<E> extends KafkaAppenderConfig<E> {
 
     @Override
     protected void append(E e) {
+        final byte[] payload = encoder.encode(e);
+        final byte[] key = keyingStrategy.createKey(e);
 
+        final Long timestamp = isAppendTimestamp() ? getTimestamp(e) : null;
+
+        final ProducerRecord<byte[], byte[]> record = new ProducerRecord<>(topic, partition, timestamp, key, payload);
+
+        final Producer<byte[], byte[]> producer = lazyProducer.get();
+        if (producer != null) {
+            deliveryStrategy.send(lazyProducer.get(), record, e, failedDeliveryCallback);
+        } else {
+            failedDeliveryCallback.onFailedDelivery(e, null);
+        }
+    }
+
+    protected Long getTimestamp(E e) {
+        if (e instanceof ILoggingEvent) {
+            return ((ILoggingEvent) e).getTimeStamp();
+        } else {
+            return System.currentTimeMillis();
+        }
     }
 
     @Override
     public void start() {
+        if (!checkPrerequisites()) return;
+
         if (!start.compareAndSet(false, true)) {
             return;
         }
 
-        int errors = 0;
-        if (errors == 0) {
-            super.start();
+        if (partition != null && partition < 0) {
+            partition = null;
         }
+
+        lazyProducer = new LazyProducer();
+        super.start();
     }
 
     @Override
     public void stop() {
-        this.lock.lock();
-
-        try {
-            super.stop();
+        super.stop();
+        if (lazyProducer != null && lazyProducer.isInitialized()) {
+            try {
+                lazyProducer.get().close();
+            } catch (KafkaException e) {
+                this.addWarn("Failed to shut down kafka producer: " + e.getMessage(), e);
+            }
+            lazyProducer = null;
             start.compareAndSet(true, false);
-        } finally {
-            this.lock.unlock();
         }
-    }
-
-    @Override
-    public void addAppender(Appender<E> newAppender) {
-        aai.addAppender(newAppender);
-    }
-
-    @Override
-    public Iterator<Appender<E>> iteratorForAppenders() {
-        return aai.iteratorForAppenders();
-    }
-
-    @Override
-    public Appender<E> getAppender(String name) {
-        return aai.getAppender(name);
-    }
-
-    @Override
-    public boolean isAttached(Appender<E> appender) {
-        return aai.isAttached(appender);
-    }
-
-    @Override
-    public void detachAndStopAllAppenders() {
-        aai.detachAndStopAllAppenders();
-    }
-
-    @Override
-    public boolean detachAppender(Appender<E> appender) {
-        return aai.detachAppender(appender);
-    }
-
-    @Override
-    public boolean detachAppender(String name) {
-        return aai.detachAppender(name);
     }
 
     /**
@@ -151,6 +140,41 @@ public class KafkaAppender<E> extends KafkaAppenderConfig<E> {
 
     protected Producer<byte[], byte[]> createProducer() {
         return new KafkaProducer<>(new HashMap<>(producerConfig));
+    }
+
+    @Override
+    public void addAppender(Appender<E> newAppender) {
+        aai.addAppender(newAppender);
+    }
+
+    @Override
+    public Iterator<Appender<E>> iteratorForAppenders() {
+        return aai.iteratorForAppenders();
+    }
+
+    @Override
+    public Appender<E> getAppender(String name) {
+        return aai.getAppender(name);
+    }
+
+    @Override
+    public boolean isAttached(Appender<E> appender) {
+        return aai.isAttached(appender);
+    }
+
+    @Override
+    public void detachAndStopAllAppenders() {
+        aai.detachAndStopAllAppenders();
+    }
+
+    @Override
+    public boolean detachAppender(Appender<E> appender) {
+        return aai.detachAppender(appender);
+    }
+
+    @Override
+    public boolean detachAppender(String name) {
+        return aai.detachAppender(name);
     }
 
 }
