@@ -7,8 +7,8 @@ import ch.qos.logback.classic.spi.LoggingEvent;
 import ch.qos.logback.core.BasicStatusManager;
 import ch.qos.logback.core.encoder.Encoder;
 import ch.qos.logback.core.status.ErrorStatus;
-import org.apache.kafka.clients.producer.KafkaProducer;
-import org.apache.kafka.clients.producer.ProducerRecord;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.kafka.clients.producer.*;
 import org.fastercode.marmot.monitor.log.logback.kafka.delivery.DeliveryStrategy;
 import org.fastercode.marmot.monitor.log.logback.kafka.delivery.FailedDeliveryCallback;
 import org.fastercode.marmot.monitor.log.logback.kafka.keying.KeyingStrategy;
@@ -24,6 +24,7 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
+@Slf4j
 public class KafkaAppenderTest {
 
     private final KafkaAppender<ILoggingEvent> appender = new KafkaAppender<>();
@@ -52,6 +53,20 @@ public class KafkaAppenderTest {
     public void after() {
         ctx.stop();
         appender.stop();
+    }
+
+    @Test
+    public void test() {
+        appender.setTopic("test-topic");
+        appender.start();
+//        final LoggingEvent evt = new LoggingEvent("fqcn", ctx.getLogger("logger"), Level.ALL, "message", null, new Object[0]);
+//        appender.append(evt);
+        byte[] key = null;
+        byte[] value = null;
+        final ProducerRecord<byte[], byte[]> msg = new ProducerRecord<>("test-topic", null, null, key, value);
+        Producer<byte[], byte[]> producer = appender.getLazyProducer().get();
+        DeliveryStrategy deliveryStrategy = appender.getDeliveryStrategy();
+        deliveryStrategy.send(producer, msg, null, null);
     }
 
     @Test

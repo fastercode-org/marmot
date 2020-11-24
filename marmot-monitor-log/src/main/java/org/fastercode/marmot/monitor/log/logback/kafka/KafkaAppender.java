@@ -3,6 +3,8 @@ package org.fastercode.marmot.monitor.log.logback.kafka;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.Appender;
 import ch.qos.logback.core.spi.AppenderAttachableImpl;
+import lombok.AccessLevel;
+import lombok.Getter;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerConfig;
@@ -18,8 +20,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class KafkaAppender<E> extends KafkaAppenderConfig<E> {
     private static final String LOGGER_PREFIX = KafkaAppender.class.getPackage().getName();
     private static final String KAFKA_LOGGER_PREFIX = KafkaProducer.class.getPackage().getName().replaceFirst("\\.producer$", "");
-
     private final AtomicBoolean start = new AtomicBoolean(false);
+
+    @Getter(AccessLevel.PROTECTED)
     private LazyProducer lazyProducer = null;
 
     private final AppenderAttachableImpl<E> aai = new AppenderAttachableImpl<E>();
@@ -47,16 +50,15 @@ public class KafkaAppender<E> extends KafkaAppenderConfig<E> {
 
     @Override
     protected void append(E e) {
-        final byte[] payload = encoder.encode(e);
         final byte[] key = keyingStrategy.createKey(e);
-
+        final byte[] value = encoder.encode(e);
         final Long timestamp = isAppendTimestamp() ? getTimestamp(e) : null;
 
-        final ProducerRecord<byte[], byte[]> record = new ProducerRecord<>(topic, partition, timestamp, key, payload);
+        final ProducerRecord<byte[], byte[]> msg = new ProducerRecord<>(topic, partition, timestamp, key, value);
 
         final Producer<byte[], byte[]> producer = lazyProducer.get();
         if (producer != null) {
-            deliveryStrategy.send(producer, record, e, failedDeliveryCallback);
+            deliveryStrategy.send(producer, msg, e, failedDeliveryCallback);
         } else {
             failedDeliveryCallback.onFailedDelivery(e, null);
         }
@@ -105,7 +107,7 @@ public class KafkaAppender<E> extends KafkaAppenderConfig<E> {
      *
      * @see <a href="https://commons.apache.org/proper/commons-lang/javadocs/api-3.4/org/apache/commons/lang3/concurrent/LazyInitializer.html">LazyInitializer</a>
      */
-    private class LazyProducer {
+    protected class LazyProducer {
 
         private volatile Producer<byte[], byte[]> producer;
 
