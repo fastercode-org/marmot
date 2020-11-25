@@ -8,8 +8,9 @@
         <topic>test-topic</topic>
         <producerConfig>bootstrap.servers=vm-kafka:9092</producerConfig>
         <producerConfig>acks=0</producerConfig>
-        <producerConfig>linger.ms=1000</producerConfig>
         <producerConfig>max.block.ms=0</producerConfig>
+        <producerConfig>linger.ms=1000</producerConfig>
+        <producerConfig>batch.size=1000</producerConfig>
         <producerConfig>client.id=${HOSTNAME}-${CONTEXT_NAME}-logback-relaxed</producerConfig>
     </appender>
 

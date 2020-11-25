@@ -7,6 +7,7 @@ import ch.qos.logback.classic.spi.LoggingEvent;
 import ch.qos.logback.core.BasicStatusManager;
 import ch.qos.logback.core.encoder.Encoder;
 import ch.qos.logback.core.status.ErrorStatus;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
@@ -17,6 +18,7 @@ import org.fastercode.marmot.monitor.log.logback.kafka.delivery.FailedDeliveryCa
 import org.fastercode.marmot.monitor.log.logback.kafka.keying.KeyingStrategy;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.ArgumentMatchers;
@@ -62,10 +64,16 @@ public class KafkaAppenderTest {
     }
 
     @Test
+    @Ignore
+    @SneakyThrows
     public void testLogSend() {
-        for (int i = 0; i < 1000; i++) {
+        for (int i = 0; i < 10000; i++) {
             logKafka.info("test-{}", i);
+            if (i < 10) {
+                Thread.sleep(500);
+            }
         }
+        Thread.sleep(10000L);
     }
 
     @Test
