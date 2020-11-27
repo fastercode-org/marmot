@@ -11,7 +11,16 @@
         <producerConfig>max.block.ms=0</producerConfig>
         <producerConfig>linger.ms=1000</producerConfig>
         <producerConfig>batch.size=1000</producerConfig>
+        <keyingStrategy class="org.fastercode.marmot.monitor.log.logback.kafka.keying.NoKeyKeyingStrategy" />
+        <deliveryStrategy class="org.fastercode.marmot.monitor.log.logback.kafka.delivery.AsynchronousDeliveryStrategy" />
         <producerConfig>client.id=${HOSTNAME}-${CONTEXT_NAME}-logback-relaxed</producerConfig>
+    </appender>
+    <appender name="KAFKA_async" class="ch.qos.logback.classic.AsyncAppender">
+        <discardingThreshold>50</discardingThreshold>
+        <neverBlock>true</neverBlock>
+        <maxFlushTime>500</maxFlushTime>
+        <queueSize>1024</queueSize>
+        <appender-ref ref="KAFKA"/>
     </appender>
 
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
@@ -23,9 +32,11 @@
         </filter>
     </appender>
 
-    <root level="DEBUG">
+    <root level="INFO">
         <appender-ref ref="STDOUT" />
-        <appender-ref ref="KAFKA" />
+        <appender-ref ref="KAFKA_async" />
     </root>
+    <logger name="org.apache.kafka.clients" level="ERROR" addtivity="false">
+    </logger>
 
 </configuration>
