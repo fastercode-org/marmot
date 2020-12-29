@@ -56,11 +56,13 @@ public abstract class TypedProperties<E extends Enum & TypedPropertyKey> {
      */
     @SuppressWarnings("unchecked")
     public <T> T getValue(final E key) {
-        T originVal = (T) defaultCache.get(key).getValue();
+        T originVal = null;
         if (typedPropertyHooks != null && typedPropertyHooks.size() > 0) {
             for (TypedPropertyHook<E> hook : typedPropertyHooks) {
                 originVal = hook.getValue(key, originVal);
             }
+        } else {
+            originVal = (T) defaultCache.get(key).getValue();
         }
         return originVal;
     }
