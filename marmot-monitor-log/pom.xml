@@ -29,9 +29,14 @@
             <artifactId>logback-classic</artifactId>
             <scope>provided</scope>
         </dependency>
+
         <dependency>
             <groupId>io.dropwizard.metrics</groupId>
-            <artifactId>metrics-jvm</artifactId>
+            <artifactId>metrics-servlets</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.dropwizard.metrics</groupId>
+            <artifactId>metrics-servlet</artifactId>
         </dependency>
 
         <dependency>
