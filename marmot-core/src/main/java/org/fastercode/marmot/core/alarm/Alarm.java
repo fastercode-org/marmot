@@ -9,6 +9,8 @@ import org.fastercode.marmot.core.alarm.hook.SPIAlarmHook;
 
 /**
  * package-private method, for test.
+ *
+ * @author huyaolong
  */
 @NoArgsConstructor(access = AccessLevel.PACKAGE)
 @Slf4j
@@ -26,12 +28,14 @@ public class Alarm {
         alarmHook.alarm(item);
     }
 
-    // single ---------
+    /**
+     * 单例
+     */
     private static final class NewInstance {
-        private static final Alarm instance = new Alarm();
+        private static final Alarm INSTANCE = new Alarm();
     }
 
     public static Alarm getInstance() {
-        return NewInstance.instance;
+        return NewInstance.INSTANCE;
     }
 }
