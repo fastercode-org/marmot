@@ -21,7 +21,7 @@ public class DingTalkAlarmTrigger {
     private static final long PERIOD_MS = 60_000L;
     private static final long PERIOD_TEST_MS = 3_000L;
 
-    private static final BufferTrigger<String, AlarmItem> bufferTrigger = new MapBufferTrigger<>(
+    private static final BufferTrigger<String, AlarmItem> BUFFER_TRIGGER = new MapBufferTrigger<>(
             new WeakHashMap<>(), MAX_BUFFER,
             DingTalkAlarmTrigger::triggerHandler,
             DingTalkAlarmTrigger::rejectHandler,
@@ -44,9 +44,9 @@ public class DingTalkAlarmTrigger {
             return;
         }
 
-        AlarmItem old = bufferTrigger.get(item.getTag());
+        AlarmItem old = BUFFER_TRIGGER.get(item.getTag());
         item.setHit(old == null ? 1 : old.getHit() + 1);
-        bufferTrigger.enqueue(item.getTag(), item);
+        BUFFER_TRIGGER.enqueue(item.getTag(), item);
     }
 
     private static boolean triggerHandler(String key, AlarmItem item) {
@@ -62,6 +62,6 @@ public class DingTalkAlarmTrigger {
     }
 
     private static void rejectHandler(String key, AlarmItem item) {
-        log.info("smart-monitor watch-error-log reject: SIZE=[{}], KEY=[{}]", bufferTrigger.getBufferSize(), key);
+        log.info("watch-error-log reject: SIZE=[{}], KEY=[{}]", BUFFER_TRIGGER.getBufferSize(), key);
     }
 }
