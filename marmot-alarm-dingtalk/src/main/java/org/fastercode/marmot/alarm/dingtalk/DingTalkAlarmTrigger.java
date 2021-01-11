@@ -62,6 +62,6 @@ public class DingTalkAlarmTrigger {
     }
 
     private static void rejectHandler(String key, AlarmItem item) {
-        log.info("watch-error-log reject: SIZE=[{}], KEY=[{}]", BUFFER_TRIGGER.getBufferSize(), key);
+        log.info("Trigger reject: SIZE=[{}], KEY=[{}]", BUFFER_TRIGGER.getBufferSize(), key);
     }
 }
