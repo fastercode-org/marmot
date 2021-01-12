@@ -1,17 +1,19 @@
 package org.fastercode.marmot.monitor.jvm;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.codahale.metrics.Gauge;
+import com.codahale.metrics.Metric;
+import com.codahale.metrics.MetricSet;
 
 import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * @author huyaolong
  */
-public class OperatingSystem {
+public class OperatingSystemGaugeSet implements MetricSet {
     private static boolean unixOperatingSystemMXBeanExists = false;
 
     private final OperatingSystemMXBean os;
@@ -28,7 +30,7 @@ public class OperatingSystem {
     /**
      * Creates a new gauge using the platform OS bean.
      */
-    public OperatingSystem() {
+    public OperatingSystemGaugeSet() {
         this(ManagementFactory.getOperatingSystemMXBean());
     }
 
@@ -37,28 +39,24 @@ public class OperatingSystem {
      *
      * @param os an {@link OperatingSystemMXBean}
      */
-    public OperatingSystem(OperatingSystemMXBean os) {
+    public OperatingSystemGaugeSet(OperatingSystemMXBean os) {
         this.os = os;
     }
 
-    public Map<String, Object> get() {
-        Map<String, Object> ret = new HashMap<>(16);
+    @Override
+    public Map<String, Metric> getMetrics() {
+        Map<String, Metric> gauges = new HashMap<>(16);
         if (unixOperatingSystemMXBeanExists && os instanceof com.sun.management.UnixOperatingSystemMXBean) {
             final com.sun.management.UnixOperatingSystemMXBean unixOs = (com.sun.management.UnixOperatingSystemMXBean) os;
-            ret.put("os.df.open", unixOs.getOpenFileDescriptorCount());
-            ret.put("os.df.max", unixOs.getMaxFileDescriptorCount());
+            gauges.put("os.fd.open", (Gauge<Long>) unixOs::getOpenFileDescriptorCount);
+            gauges.put("os.fd.max", (Gauge<Long>) unixOs::getMaxFileDescriptorCount);
         }
-        ret.put("os.arch", os.getArch());
-        ret.put("os.name", os.getName());
-        ret.put("os.version", os.getVersion());
-        ret.put("os.cpu.num", os.getAvailableProcessors());
-        ret.put("os.cpu.load", os.getSystemLoadAverage());
-        return ret;
-    }
-
-    public static void main(String[] args) {
-        OperatingSystem os = new OperatingSystem();
-        System.out.println(JSON.toJSONString(os.get(), SerializerFeature.PrettyFormat));
+        gauges.put("os.arch", (Gauge<String>) os::getArch);
+        gauges.put("os.name", (Gauge<String>) os::getName);
+        gauges.put("os.version", (Gauge<String>) os::getVersion);
+        gauges.put("os.cpu.num", (Gauge<Integer>) os::getAvailableProcessors);
+        gauges.put("os.cpu.load", (Gauge<Double>) os::getSystemLoadAverage);
+        return Collections.unmodifiableMap(gauges);
     }
 
 }
