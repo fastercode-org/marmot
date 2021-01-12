@@ -3,6 +3,9 @@ package org.fastercode.marmot.alarm.dingtalk;
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.spi.LoggingEvent;
 import ch.qos.logback.classic.spi.ThrowableProxy;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.codahale.metrics.jvm.MemoryUsageGaugeSet;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.fastercode.marmot.monitor.log.logback.filter.ErrorLogFilter;
@@ -24,6 +27,11 @@ public class UnitTest {
             log.error("test", new RuntimeException("Test"));
         }
         Thread.sleep(10_000L);
+    }
+
+    public static void main(String[] args) {
+        MemoryUsageGaugeSet set = new MemoryUsageGaugeSet();
+        System.out.println(JSON.toJSONString(set, SerializerFeature.PrettyFormat));
     }
 
     @Test
