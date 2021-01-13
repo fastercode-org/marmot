@@ -31,6 +31,16 @@ public class SpringBootHttpTest {
     public static class App {
         public static void main(String[] args) {
             SpringApplication.run(App.class, args);
+            new Thread(() -> {
+                while (true) {
+                    try {
+                        Thread.sleep(2000L);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    System.gc();
+                }
+            }).start();
         }
     }
 

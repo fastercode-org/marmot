@@ -139,7 +139,7 @@ public class GcGaugeSet implements MetricSet {
 
     @Override
     public Map<String, Metric> getMetrics() {
-        final Map<String, Metric> gauges = new HashMap<>();
+        final Map<String, Metric> gauges = new HashMap<>(16);
 
         // real name gc
         for (final GarbageCollectorMXBean gc : garbageCollectors) {
