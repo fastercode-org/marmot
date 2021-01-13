@@ -14,18 +14,18 @@ import java.util.regex.Pattern;
 
 import static com.codahale.metrics.MetricRegistry.name;
 
-public class MemoryUsageGaugeSet implements MetricSet {
+public class MemoryGaugeSet implements MetricSet {
     private static final Pattern WHITESPACE = Pattern.compile("[\\s]+");
 
     private final MemoryMXBean mxBean;
     private final List<MemoryPoolMXBean> memoryPools;
 
-    public MemoryUsageGaugeSet() {
+    public MemoryGaugeSet() {
         this(ManagementFactory.getMemoryMXBean(), ManagementFactory.getMemoryPoolMXBeans());
     }
 
-    public MemoryUsageGaugeSet(MemoryMXBean mxBean,
-                               Collection<MemoryPoolMXBean> memoryPools) {
+    public MemoryGaugeSet(MemoryMXBean mxBean,
+                          Collection<MemoryPoolMXBean> memoryPools) {
         this.mxBean = mxBean;
         this.memoryPools = new ArrayList<>(memoryPools);
     }

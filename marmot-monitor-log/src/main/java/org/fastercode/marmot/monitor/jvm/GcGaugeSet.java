@@ -15,7 +15,7 @@ import static com.codahale.metrics.MetricRegistry.name;
 /**
  * A set of gauges for the counts and elapsed times of garbage collections.
  */
-public class GarbageCollectorMetricSet implements MetricSet {
+public class GcGaugeSet implements MetricSet {
     private static final Set<String> FULL_GC_NAME = Sets.newHashSet("ConcurrentMarkSweep", "MarkSweepCompact", "PS MarkSweep", "G1 Old Generation",
             "Garbage collection optimized for short pausetimes Old Collector", "Garbage collection optimized for throughput Old Collector",
             "Garbage collection optimized for deterministic pausetimes Old Collector");
@@ -38,7 +38,7 @@ public class GarbageCollectorMetricSet implements MetricSet {
     /**
      * Creates a new set of gauges for all discoverable garbage collectors.
      */
-    public GarbageCollectorMetricSet() {
+    public GcGaugeSet() {
         this(ManagementFactory.getGarbageCollectorMXBeans());
     }
 
@@ -47,7 +47,7 @@ public class GarbageCollectorMetricSet implements MetricSet {
      *
      * @param garbageCollectors the garbage collectors
      */
-    public GarbageCollectorMetricSet(Collection<GarbageCollectorMXBean> garbageCollectors) {
+    public GcGaugeSet(Collection<GarbageCollectorMXBean> garbageCollectors) {
         this.garbageCollectors = new ArrayList<>(garbageCollectors);
         for (final GarbageCollectorMXBean gc : this.garbageCollectors) {
             String name = gc.getName();
