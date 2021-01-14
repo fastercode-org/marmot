@@ -12,7 +12,7 @@
         <module>marmot-core</module>
         <module>marmot-alarm-dingtalk</module>
         <module>marmot-alarm-email</module>
-        <module>marmot-monitor-log</module>
+        <module>marmot-monitor-basic</module>
     </modules>
 
     <name>${project.artifactId}</name>

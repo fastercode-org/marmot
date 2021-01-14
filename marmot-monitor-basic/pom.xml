@@ -9,7 +9,7 @@
         <version>1.0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>marmot-monitor-log</artifactId>
+    <artifactId>marmot-monitor-basic</artifactId>
 
     <name>${project.artifactId}</name>
     <url>http://marmot.fastercode.org</url>

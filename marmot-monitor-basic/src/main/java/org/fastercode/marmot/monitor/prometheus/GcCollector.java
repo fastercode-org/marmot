@@ -4,7 +4,7 @@ import com.codahale.metrics.Gauge;
 import com.codahale.metrics.Metric;
 import io.prometheus.client.Collector;
 import io.prometheus.client.GaugeMetricFamily;
-import org.fastercode.marmot.monitor.jvm.GcGaugeSet;
+import org.fastercode.marmot.monitor.metrics.GcGaugeSet;
 
 import java.util.ArrayList;
 import java.util.Arrays;

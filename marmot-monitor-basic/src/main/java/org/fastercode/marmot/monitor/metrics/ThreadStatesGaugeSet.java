@@ -1,4 +1,4 @@
-package org.fastercode.marmot.monitor.jvm;
+package org.fastercode.marmot.monitor.metrics;
 
 import com.codahale.metrics.Gauge;
 import com.codahale.metrics.Metric;
