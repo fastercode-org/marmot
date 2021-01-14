@@ -50,6 +50,18 @@ public class OperatingSystemGaugeSet implements MetricSet {
             final com.sun.management.UnixOperatingSystemMXBean unixOs = (com.sun.management.UnixOperatingSystemMXBean) os;
             gauges.put("fd.open", (Gauge<Long>) unixOs::getOpenFileDescriptorCount);
             gauges.put("fd.max", (Gauge<Long>) unixOs::getMaxFileDescriptorCount);
+
+            gauges.put("cpu.sys.load", (Gauge<Double>) unixOs::getSystemCpuLoad);
+            gauges.put("cpu.proc.load", (Gauge<Double>) unixOs::getProcessCpuLoad);
+
+            gauges.put("proc.cpu.time", (Gauge<Long>) unixOs::getProcessCpuTime);
+            gauges.put("vm.committed", (Gauge<Long>) unixOs::getCommittedVirtualMemorySize);
+            gauges.put("swap.total", (Gauge<Long>) unixOs::getTotalSwapSpaceSize);
+            gauges.put("swap.free", (Gauge<Long>) unixOs::getFreeSwapSpaceSize);
+            gauges.put("swap.used", (Gauge<Long>) () -> unixOs.getTotalSwapSpaceSize() - unixOs.getFreeSwapSpaceSize());
+            gauges.put("mem.total", (Gauge<Long>) unixOs::getTotalPhysicalMemorySize);
+            gauges.put("mem.free", (Gauge<Long>) unixOs::getFreePhysicalMemorySize);
+            gauges.put("mem.used", (Gauge<Long>) () -> unixOs.getTotalPhysicalMemorySize() - unixOs.getFreePhysicalMemorySize());
         }
 
         gauges.put("cpu.num", (Gauge<Long>) () -> (long) os.getAvailableProcessors());
