@@ -48,16 +48,16 @@ public class OperatingSystemGaugeSet implements MetricSet {
         Map<String, Metric> gauges = new HashMap<>(16);
         if (unixOperatingSystemMXBeanExists && os instanceof com.sun.management.UnixOperatingSystemMXBean) {
             final com.sun.management.UnixOperatingSystemMXBean unixOs = (com.sun.management.UnixOperatingSystemMXBean) os;
-            gauges.put("os.fd.open", (Gauge<Long>) unixOs::getOpenFileDescriptorCount);
-            gauges.put("os.fd.max", (Gauge<Long>) unixOs::getMaxFileDescriptorCount);
+            gauges.put("fd.open", (Gauge<Long>) unixOs::getOpenFileDescriptorCount);
+            gauges.put("fd.max", (Gauge<Long>) unixOs::getMaxFileDescriptorCount);
         }
 
-        gauges.put("os.cpu.num", (Gauge<Long>) () -> (long) os.getAvailableProcessors());
-        gauges.put("os.cpu.load", (Gauge<Double>) os::getSystemLoadAverage);
+        gauges.put("cpu.num", (Gauge<Long>) () -> (long) os.getAvailableProcessors());
+        gauges.put("cpu.load", (Gauge<Double>) os::getSystemLoadAverage);
 
-        gauges.put("os.arch", (Gauge<String>) os::getArch);
-        gauges.put("os.name", (Gauge<String>) os::getName);
-        gauges.put("os.version", (Gauge<String>) os::getVersion);
+        gauges.put("arch", (Gauge<String>) os::getArch);
+        gauges.put("name", (Gauge<String>) os::getName);
+        gauges.put("version", (Gauge<String>) os::getVersion);
 
         return Collections.unmodifiableMap(gauges);
     }

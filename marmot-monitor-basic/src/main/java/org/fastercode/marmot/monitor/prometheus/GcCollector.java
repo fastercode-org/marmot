@@ -20,7 +20,7 @@ public class GcCollector extends Collector {
 
     private static final Pattern REPLACE_CHART = Pattern.compile("[^\\w\\d]+");
 
-    private final GcGaugeSet gcGaugeSet = new GcGaugeSet();
+    private final GcGaugeSet gaugeSet = new GcGaugeSet();
 
     @Override
     public List<MetricFamilySamples> collect() {
@@ -28,8 +28,8 @@ public class GcCollector extends Collector {
 
         GaugeMetricFamily gc_group_count = new GaugeMetricFamily("MarmotGc_span_count_group", "", Arrays.asList("name"));
         try {
-            gc_group_count.addMetric(Arrays.asList("span.ygc.count"), (long) ((Gauge) gcGaugeSet.getMetrics().get("span.ygc.count")).getValue());
-            gc_group_count.addMetric(Arrays.asList("span.fgc.count"), (long) ((Gauge) gcGaugeSet.getMetrics().get("span.fgc.count")).getValue());
+            gc_group_count.addMetric(Arrays.asList("span.ygc.count"), (long) ((Gauge) gaugeSet.getMetrics().get("span.ygc.count")).getValue());
+            gc_group_count.addMetric(Arrays.asList("span.fgc.count"), (long) ((Gauge) gaugeSet.getMetrics().get("span.fgc.count")).getValue());
             mfs.add(gc_group_count);
         } catch (Exception ignore) {
             // skip
@@ -37,14 +37,14 @@ public class GcCollector extends Collector {
 
         GaugeMetricFamily gc_group_time = new GaugeMetricFamily("MarmotGc_span_time_group", "", Arrays.asList("name"));
         try {
-            gc_group_time.addMetric(Arrays.asList("span.ygc.time"), (long) ((Gauge) gcGaugeSet.getMetrics().get("span.ygc.time")).getValue());
-            gc_group_time.addMetric(Arrays.asList("span.fgc.time"), (long) ((Gauge) gcGaugeSet.getMetrics().get("span.fgc.time")).getValue());
+            gc_group_time.addMetric(Arrays.asList("span.ygc.time"), (long) ((Gauge) gaugeSet.getMetrics().get("span.ygc.time")).getValue());
+            gc_group_time.addMetric(Arrays.asList("span.fgc.time"), (long) ((Gauge) gaugeSet.getMetrics().get("span.fgc.time")).getValue());
             mfs.add(gc_group_time);
         } catch (Exception ignore) {
             // skip
         }
 
-        for (Map.Entry<String, Metric> entry : gcGaugeSet.getMetrics().entrySet()) {
+        for (Map.Entry<String, Metric> entry : gaugeSet.getMetrics().entrySet()) {
             try {
                 Gauge v = (Gauge) entry.getValue();
                 CounterMetricFamily gc = new CounterMetricFamily("MarmotGc_" + REPLACE_CHART.matcher(entry.getKey()).replaceAll("_"), "", Arrays.asList("name"));

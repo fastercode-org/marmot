@@ -60,6 +60,7 @@ public class SpringBootHttpTest {
             CollectorRegistry registry = new CollectorRegistry();
             registry.register(new GcCollector());
             registry.register(new MemoryCollector());
+            registry.register(new OperatingSystemCollector());
 
             ServletRegistrationBean bean = new ServletRegistrationBean(
                     new PrometheusMyServlet(registry),
