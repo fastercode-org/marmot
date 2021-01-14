@@ -28,8 +28,8 @@ public class GcCollector extends Collector {
 
         GaugeMetricFamily gc_group_count = new GaugeMetricFamily("MarmotGc_span_count_group", "", Arrays.asList("name"));
         try {
-            gc_group_count.addMetric(Arrays.asList("span.ygc.count"), (long) ((Gauge) gcGaugeSet.getMetrics().get("ygc.span.count")).getValue());
-            gc_group_count.addMetric(Arrays.asList("span.fgc.count"), (long) ((Gauge) gcGaugeSet.getMetrics().get("fgc.span.count")).getValue());
+            gc_group_count.addMetric(Arrays.asList("span.ygc.count"), (long) ((Gauge) gcGaugeSet.getMetrics().get("span.ygc.count")).getValue());
+            gc_group_count.addMetric(Arrays.asList("span.fgc.count"), (long) ((Gauge) gcGaugeSet.getMetrics().get("span.fgc.count")).getValue());
             mfs.add(gc_group_count);
         } catch (Exception ignore) {
             // skip
@@ -37,8 +37,8 @@ public class GcCollector extends Collector {
 
         GaugeMetricFamily gc_group_time = new GaugeMetricFamily("MarmotGc_span_time_group", "", Arrays.asList("name"));
         try {
-            gc_group_time.addMetric(Arrays.asList("span.ygc.time"), (long) ((Gauge) gcGaugeSet.getMetrics().get("ygc.span.time")).getValue());
-            gc_group_time.addMetric(Arrays.asList("span.fgc.time"), (long) ((Gauge) gcGaugeSet.getMetrics().get("fgc.span.time")).getValue());
+            gc_group_time.addMetric(Arrays.asList("span.ygc.time"), (long) ((Gauge) gcGaugeSet.getMetrics().get("span.ygc.time")).getValue());
+            gc_group_time.addMetric(Arrays.asList("span.fgc.time"), (long) ((Gauge) gcGaugeSet.getMetrics().get("span.fgc.time")).getValue());
             mfs.add(gc_group_time);
         } catch (Exception ignore) {
             // skip
