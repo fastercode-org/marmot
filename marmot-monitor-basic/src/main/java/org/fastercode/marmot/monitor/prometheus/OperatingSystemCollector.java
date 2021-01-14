@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
 public class OperatingSystemCollector extends Collector {
 
     private static final Pattern REPLACE_CHART = Pattern.compile("[^\\w\\d]+");
-    private static final HashSet<String> STRING_KEYS = Sets.newHashSet("os.arch", "os.name", "os.version");
+    private static final HashSet<String> STRING_KEYS = Sets.newHashSet("arch", "name", "version");
 
     private final OperatingSystemGaugeSet gaugeSet = new OperatingSystemGaugeSet();
 
@@ -24,13 +24,17 @@ public class OperatingSystemCollector extends Collector {
     public List<MetricFamilySamples> collect() {
         List<MetricFamilySamples> mfs = new ArrayList<>();
 
-        GaugeMetricFamily info = new GaugeMetricFamily("MarmotOs_info", "", Arrays.asList("arch", "name", "version"));
-        info.addMetric(Arrays.asList(
-                ((Gauge) gaugeSet.getMetrics().get("os.arch")).getValue().toString(),
-                ((Gauge) gaugeSet.getMetrics().get("os.name")).getValue().toString(),
-                ((Gauge) gaugeSet.getMetrics().get("os.version")).getValue().toString()
-        ), 1L);
-        mfs.add(info);
+        try {
+            GaugeMetricFamily info = new GaugeMetricFamily("MarmotOs_info", "", Arrays.asList("arch", "name", "version"));
+            info.addMetric(Arrays.asList(
+                    ((Gauge) gaugeSet.getMetrics().get("arch")).getValue().toString(),
+                    ((Gauge) gaugeSet.getMetrics().get("name")).getValue().toString(),
+                    ((Gauge) gaugeSet.getMetrics().get("version")).getValue().toString()
+            ), 1L);
+            mfs.add(info);
+        } catch (Exception ignore) {
+            // skip
+        }
 
         for (Map.Entry<String, Metric> entry : gaugeSet.getMetrics().entrySet()) {
             try {
