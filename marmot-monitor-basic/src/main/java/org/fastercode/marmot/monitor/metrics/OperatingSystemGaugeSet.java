@@ -51,11 +51,14 @@ public class OperatingSystemGaugeSet implements MetricSet {
             gauges.put("os.fd.open", (Gauge<Long>) unixOs::getOpenFileDescriptorCount);
             gauges.put("os.fd.max", (Gauge<Long>) unixOs::getMaxFileDescriptorCount);
         }
+
+        gauges.put("os.cpu.num", (Gauge<Long>) () -> (long) os.getAvailableProcessors());
+        gauges.put("os.cpu.load", (Gauge<Double>) os::getSystemLoadAverage);
+
         gauges.put("os.arch", (Gauge<String>) os::getArch);
         gauges.put("os.name", (Gauge<String>) os::getName);
         gauges.put("os.version", (Gauge<String>) os::getVersion);
-        gauges.put("os.cpu.num", (Gauge<Integer>) os::getAvailableProcessors);
-        gauges.put("os.cpu.load", (Gauge<Double>) os::getSystemLoadAverage);
+
         return Collections.unmodifiableMap(gauges);
     }
 
