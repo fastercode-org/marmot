@@ -155,10 +155,10 @@ public class GcGaugeSet implements MetricSet {
         gauges.put("fgc.time", (Gauge<Long>) this::fullGcCollectionTime);
 
         // span: ygc & fgc
-        gauges.put("ygc.span.count", (Gauge<Long>) this::spanYongGcCollectionCount);
-        gauges.put("ygc.span.time", (Gauge<Long>) this::spanYongGcCollectionTime);
-        gauges.put("fgc.span.count", (Gauge<Long>) this::spanFullGcCollectionCount);
-        gauges.put("fgc.span.time", (Gauge<Long>) this::spanFullGcCollectionTime);
+        gauges.put("span.ygc.count", (Gauge<Long>) this::spanYongGcCollectionCount);
+        gauges.put("span.ygc.time", (Gauge<Long>) this::spanYongGcCollectionTime);
+        gauges.put("span.fgc.count", (Gauge<Long>) this::spanFullGcCollectionCount);
+        gauges.put("span.fgc.time", (Gauge<Long>) this::spanFullGcCollectionTime);
 
         return Collections.unmodifiableMap(gauges);
     }
