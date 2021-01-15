@@ -63,6 +63,7 @@ public class SpringBootHttpTest {
             registry.register(new MemoryCollector());
             registry.register(new OperatingSystemCollector());
             registry.register(new RuntimeCollector());
+            registry.register(new ThreadStatesCollector());
 
             ServletRegistrationBean bean = new ServletRegistrationBean(
                     new PrometheusMyServlet(registry),

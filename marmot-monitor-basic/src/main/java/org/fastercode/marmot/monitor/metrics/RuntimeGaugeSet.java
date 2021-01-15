@@ -6,10 +6,7 @@ import com.codahale.metrics.MetricSet;
 
 import java.lang.management.ManagementFactory;
 import java.lang.management.RuntimeMXBean;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 /**
  * A set of gauges for the runtime
@@ -18,7 +15,7 @@ import java.util.Map;
  */
 public class RuntimeGaugeSet implements MetricSet {
     private final RuntimeMXBean runtime;
-    private Map<String, String> systemProperties;
+    private final Set<String> systemProperties = new HashSet<>();
 
     /**
      * Creates a new set of gauges.
@@ -35,9 +32,16 @@ public class RuntimeGaugeSet implements MetricSet {
     public RuntimeGaugeSet(RuntimeMXBean runtime) {
         this.runtime = runtime;
         try {
-            systemProperties = new HashMap<>(runtime.getSystemProperties());
-            systemProperties.remove("java.class.path");
-            systemProperties.remove("sun.boot.class.path");
+            Map<String, String> properties = new HashMap<>(runtime.getSystemProperties());
+            // remove too many characters
+            properties.remove("java.class.path");
+            properties.remove("sun.boot.class.path");
+            properties.remove("java.ext.dirs");
+            properties.remove("java.library.path");
+            properties.remove("java.endorsed.dirs");
+            for (Map.Entry<String, String> entry : properties.entrySet()) {
+                systemProperties.add(entry.getKey() + "=" + entry.getValue());
+            }
         } catch (Exception ignore) {
             // sikip
         }
@@ -57,8 +61,8 @@ public class RuntimeGaugeSet implements MetricSet {
         gauges.put("uptime", (Gauge<Long>) runtime::getUptime);
         gauges.put("start.timestamp", (Gauge<Long>) runtime::getStartTime);
 
-        gauges.put("properties", (Gauge<String>) systemProperties::toString);
-        gauges.put("arguments", (Gauge<String>) () -> runtime.getInputArguments().toString());
+        gauges.put("properties", (Gauge<Set<String>>) () -> systemProperties);
+        gauges.put("arguments", (Gauge<List<String>>) runtime::getInputArguments);
         gauges.put("library.path", (Gauge<String>) runtime::getLibraryPath);
 
         return Collections.unmodifiableMap(gauges);

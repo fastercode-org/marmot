@@ -17,6 +17,8 @@ import static com.codahale.metrics.MetricRegistry.name;
 
 /**
  * A set of gauges for the number of threads in their various states and deadlock detection.
+ *
+ * @author huyaolong
  */
 public class ThreadStatesGaugeSet implements MetricSet {
 
@@ -50,16 +52,16 @@ public class ThreadStatesGaugeSet implements MetricSet {
         final Map<String, Metric> gauges = new HashMap<>();
 
         for (final Thread.State state : Thread.State.values()) {
-            gauges.put(name(state.toString().toLowerCase(), "count"),
-                    (Gauge<Object>) () -> getThreadCount(state));
+            gauges.put(name("state", "count", state.toString().toLowerCase()),
+                    (Gauge<Long>) () -> (long) getThreadCount(state));
         }
 
-        gauges.put("count", (Gauge<Integer>) threads::getThreadCount);
-        gauges.put("daemon.count", (Gauge<Integer>) threads::getDaemonThreadCount);
-        gauges.put("peak.count", (Gauge<Integer>) threads::getPeakThreadCount);
-        gauges.put("total_started.count", (Gauge<Long>) threads::getTotalStartedThreadCount);
-        gauges.put("deadlock.count", (Gauge<Integer>) () -> deadlockDetector.getDeadlockedThreads().size());
+        gauges.put("count", (Gauge<Long>) () -> (long) threads.getThreadCount());
+        gauges.put("daemon.count", (Gauge<Long>) () -> (long) threads.getDaemonThreadCount());
+        gauges.put("peak.count", (Gauge<Long>) () -> (long) threads.getPeakThreadCount());
+        gauges.put("deadlock.count", (Gauge<Long>) () -> (long) deadlockDetector.getDeadlockedThreads().size());
         gauges.put("deadlocks", (Gauge<Set<String>>) deadlockDetector::getDeadlockedThreads);
+        gauges.put("total_started.count", (Gauge<Long>) threads::getTotalStartedThreadCount);
 
         return Collections.unmodifiableMap(gauges);
     }
