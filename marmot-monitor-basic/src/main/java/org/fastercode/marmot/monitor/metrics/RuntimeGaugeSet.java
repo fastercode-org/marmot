@@ -61,7 +61,7 @@ public class RuntimeGaugeSet implements MetricSet {
 
         gauges.put("uptime", (Gauge<Long>) runtime::getUptime);
         gauges.put("start.timestamp", (Gauge<Long>) runtime::getStartTime);
-        gauges.put("start.date", (Gauge<String>) () -> (new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ")).format(new Date(runtime.getStartTime())));
+        gauges.put("start.date", (Gauge<String>) () -> (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS Z")).format(new Date(runtime.getStartTime())));
 
         gauges.put("properties", (Gauge<Set<String>>) () -> systemProperties);
         gauges.put("arguments", (Gauge<List<String>>) runtime::getInputArguments);
