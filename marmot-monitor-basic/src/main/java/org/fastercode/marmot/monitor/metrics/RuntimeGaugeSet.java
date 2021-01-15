@@ -18,6 +18,7 @@ import java.util.Map;
  */
 public class RuntimeGaugeSet implements MetricSet {
     private final RuntimeMXBean runtime;
+    private Map<String, String> systemProperties;
 
     /**
      * Creates a new set of gauges.
@@ -33,13 +34,19 @@ public class RuntimeGaugeSet implements MetricSet {
      */
     public RuntimeGaugeSet(RuntimeMXBean runtime) {
         this.runtime = runtime;
+        try {
+            systemProperties = new HashMap<>(runtime.getSystemProperties());
+            systemProperties.remove("java.class.path");
+            systemProperties.remove("sun.boot.class.path");
+        } catch (Exception ignore) {
+            // sikip
+        }
     }
 
     @Override
     public Map<String, Metric> getMetrics() {
         final Map<String, Metric> gauges = new HashMap<>();
 
-        gauges.put("proc.name", (Gauge<String>) runtime::getName);
         gauges.put("jvm.vendor", (Gauge<String>) () -> String.format(Locale.US,
                 "%s %s %s (%s)",
                 runtime.getVmVendor(),
@@ -50,11 +57,9 @@ public class RuntimeGaugeSet implements MetricSet {
         gauges.put("uptime", (Gauge<Long>) runtime::getUptime);
         gauges.put("start.timestamp", (Gauge<Long>) runtime::getStartTime);
 
+        gauges.put("properties", (Gauge<String>) systemProperties::toString);
         gauges.put("arguments", (Gauge<String>) () -> runtime.getInputArguments().toString());
-        gauges.put("properties", (Gauge<String>) () -> runtime.getSystemProperties().toString());
-        gauges.put("class.path", (Gauge<String>) runtime::getClassPath);
         gauges.put("library.path", (Gauge<String>) runtime::getLibraryPath);
-        gauges.put("boot.class.path", (Gauge<String>) runtime::getBootClassPath);
 
         return Collections.unmodifiableMap(gauges);
     }

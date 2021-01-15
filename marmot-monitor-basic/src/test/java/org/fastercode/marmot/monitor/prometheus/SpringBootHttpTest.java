@@ -27,6 +27,7 @@ import org.springframework.util.MultiValueMap;
 @SpringBootTest(classes = {SpringBootHttpTest.App.class})
 @AutoConfigureMockMvc
 public class SpringBootHttpTest {
+
     @SpringBootApplication
     public static class App {
         public static void main(String[] args) {

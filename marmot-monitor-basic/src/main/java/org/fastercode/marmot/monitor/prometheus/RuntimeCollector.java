@@ -31,7 +31,7 @@ public class RuntimeCollector extends Collector {
                     continue;
                 }
                 GaugeMetricFamily mf = new GaugeMetricFamily("MarmotRuntime_" + REPLACE_CHART.matcher(entry.getKey()).replaceAll("_"), "", Arrays.asList("name", "value"));
-                mf.addMetric(Arrays.asList(entry.getKey(), String.valueOf(entry.getValue())), 1);
+                mf.addMetric(Arrays.asList(entry.getKey(), String.valueOf(((Gauge<?>) entry.getValue()).getValue())), 1);
                 mfs.add(mf);
             } catch (Exception ignore) {
                 // skip
