@@ -3,6 +3,7 @@ package org.fastercode.marmot.monitor.prometheus;
 import com.codahale.metrics.Gauge;
 import com.codahale.metrics.Metric;
 import io.prometheus.client.Collector;
+import io.prometheus.client.CounterMetricFamily;
 import io.prometheus.client.GaugeMetricFamily;
 import org.fastercode.marmot.monitor.metrics.RuntimeGaugeSet;
 
@@ -27,6 +28,14 @@ public class RuntimeCollector extends Collector {
                 if (!(entry.getValue() instanceof Gauge)) {
                     continue;
                 }
+                if ("uptime".equals(entry.getKey())) {
+                    CounterMetricFamily mf = new CounterMetricFamily("MarmotRuntime_" + REPLACE_CHART.matcher(entry.getKey()).replaceAll("_"), "", Arrays.asList("name", "value"));
+                    Object v = ((Gauge<?>) entry.getValue()).getValue();
+                    mf.addMetric(Arrays.asList(entry.getKey(), String.valueOf(v)), (long) v);
+                    mfs.add(mf);
+                    continue;
+                }
+
                 Gauge v = (Gauge) entry.getValue();
                 GaugeMetricFamily mf = new GaugeMetricFamily("MarmotRuntime_" + REPLACE_CHART.matcher(entry.getKey()).replaceAll("_"), "", Arrays.asList("name", "value"));
 
@@ -36,7 +45,11 @@ public class RuntimeCollector extends Collector {
                     }
 
                 } else {
-                    mf.addMetric(Arrays.asList(entry.getKey(), String.valueOf(((Gauge<?>) entry.getValue()).getValue())), 1);
+                    long val = 1;
+                    if (v.getValue() instanceof Long) {
+                        val = (long) v.getValue();
+                    }
+                    mf.addMetric(Arrays.asList(entry.getKey(), String.valueOf(((Gauge<?>) entry.getValue()).getValue())), val);
                 }
 
                 mfs.add(mf);
