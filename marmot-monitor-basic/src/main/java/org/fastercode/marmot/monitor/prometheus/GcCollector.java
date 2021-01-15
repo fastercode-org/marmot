@@ -47,8 +47,8 @@ public class GcCollector extends Collector {
         for (Map.Entry<String, Metric> entry : gaugeSet.getMetrics().entrySet()) {
             try {
                 Gauge v = (Gauge) entry.getValue();
-                CounterMetricFamily gc = new CounterMetricFamily("MarmotGc_" + REPLACE_CHART.matcher(entry.getKey()).replaceAll("_"), "", Arrays.asList("name"));
-                gc.addMetric(Arrays.asList(entry.getKey()), (long) v.getValue());
+                CounterMetricFamily gc = new CounterMetricFamily("MarmotGc_" + REPLACE_CHART.matcher(entry.getKey()).replaceAll("_"), "", Arrays.asList("name", "value"));
+                gc.addMetric(Arrays.asList(entry.getKey(), String.valueOf(v.getValue())), (long) v.getValue());
                 mfs.add(gc);
             } catch (Exception ignore) {
                 // skip

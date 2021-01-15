@@ -31,8 +31,8 @@ public class MemoryCollector extends Collector {
                     continue;
                 }
                 Gauge v = (Gauge) entry.getValue();
-                GaugeMetricFamily mf = new GaugeMetricFamily("MarmotMem_" + REPLACE_CHART.matcher(entry.getKey()).replaceAll("_"), "", Arrays.asList("name"));
-                mf.addMetric(Arrays.asList(entry.getKey()), (long) v.getValue());
+                GaugeMetricFamily mf = new GaugeMetricFamily("MarmotMem_" + REPLACE_CHART.matcher(entry.getKey()).replaceAll("_"), "", Arrays.asList("name", "value"));
+                mf.addMetric(Arrays.asList(entry.getKey(), String.valueOf(v.getValue())), (long) v.getValue());
                 mfs.add(mf);
             } catch (Exception ignore) {
                 // skip
