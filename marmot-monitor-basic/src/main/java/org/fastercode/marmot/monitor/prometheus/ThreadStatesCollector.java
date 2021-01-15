@@ -3,6 +3,7 @@ package org.fastercode.marmot.monitor.prometheus;
 import com.codahale.metrics.Gauge;
 import com.codahale.metrics.Metric;
 import io.prometheus.client.Collector;
+import io.prometheus.client.CounterMetricFamily;
 import io.prometheus.client.GaugeMetricFamily;
 import org.fastercode.marmot.monitor.metrics.ThreadStatesGaugeSet;
 
@@ -27,6 +28,14 @@ public class ThreadStatesCollector extends Collector {
                 if (!(entry.getValue() instanceof Gauge)) {
                     continue;
                 }
+                if ("total_started.count".equals(entry.getKey())) {
+                    CounterMetricFamily mf = new CounterMetricFamily("MarmotThreadStates_" + REPLACE_CHART.matcher(entry.getKey()).replaceAll("_"), "", Arrays.asList("name", "value"));
+                    Object v = ((Gauge<?>) entry.getValue()).getValue();
+                    mf.addMetric(Arrays.asList(entry.getKey(), String.valueOf(v)), (long) v);
+                    mfs.add(mf);
+                    continue;
+                }
+
                 Gauge v = (Gauge) entry.getValue();
                 GaugeMetricFamily mf = new GaugeMetricFamily("MarmotThreadStates_" + REPLACE_CHART.matcher(entry.getKey()).replaceAll("_"), "", Arrays.asList("name", "value"));
 
