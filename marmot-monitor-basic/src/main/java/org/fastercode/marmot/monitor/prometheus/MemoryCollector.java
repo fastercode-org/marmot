@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
 /**
  * @author huyaolong
  */
-public class MemoryCollector extends Collector {
+public class MemoryCollector extends BaseCollector {
 
     private static final Pattern REPLACE_CHART = Pattern.compile("[^\\w\\d]+");
 

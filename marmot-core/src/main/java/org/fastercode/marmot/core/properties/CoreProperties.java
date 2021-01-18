@@ -23,4 +23,12 @@ public final class CoreProperties extends TypedProperties<CorePropertyKey> {
         super(CorePropertyKey.class, props);
         super.setTypedPropertyHooks((Collection<? extends TypedPropertyHook<CorePropertyKey>>) propertyHooks);
     }
+
+    private static class Instance {
+        private static final CoreProperties properties = new CoreProperties(System.getProperties());
+    }
+
+    public static <T> T get(CorePropertyKey key) {
+        return Instance.properties.getValue(key);
+    }
 }

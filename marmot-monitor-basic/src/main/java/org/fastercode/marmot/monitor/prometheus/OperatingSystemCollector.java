@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 /**
  * @author huyaolong
  */
-public class OperatingSystemCollector extends Collector {
+public class OperatingSystemCollector extends BaseCollector {
 
     private static final Pattern REPLACE_CHART = Pattern.compile("[^\\w\\d]+");
     private static final HashSet<String> STRING_KEYS = Sets.newHashSet("arch", "name", "version");

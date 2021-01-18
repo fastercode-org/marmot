@@ -18,4 +18,5 @@ public enum ErrorLogPropertyKey implements TypedPropertyKey {
     private final Object defaultValue;
 
     private final Class<?> type;
+
 }

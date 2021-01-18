@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 /**
  * @author huyaolong
  */
-public class RuntimeCollector extends Collector {
+public class RuntimeCollector extends BaseCollector {
 
     private static final Pattern REPLACE_CHART = Pattern.compile("[^\\w\\d]+");
 
