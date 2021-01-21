@@ -7,6 +7,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author harold
+ */
 public class MarkdownMessage implements Message {
 
     private String title;
@@ -83,6 +86,7 @@ public class MarkdownMessage implements Message {
         return sb.toString();
     }
 
+    @Override
     public String toJsonString() {
         Map<String, Object> result = new HashMap<String, Object>();
         result.put("msgtype", "markdown");

@@ -1,5 +1,8 @@
 package org.fastercode.marmot.alarm.dingtalk.ding.message;
 
+/**
+ * @author harold
+ */
 public interface Message {
 
     /**

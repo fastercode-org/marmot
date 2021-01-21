@@ -7,6 +7,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author harold
+ */
 public class FeedCardMessage implements Message {
 
     private List<FeedCardMessageItem> feedItems;
@@ -19,6 +22,7 @@ public class FeedCardMessage implements Message {
         this.feedItems = feedItems;
     }
 
+    @Override
     public String toJsonString() {
         Map<String, Object> items = new HashMap<String, Object>();
         items.put("msgtype", "feedCard");

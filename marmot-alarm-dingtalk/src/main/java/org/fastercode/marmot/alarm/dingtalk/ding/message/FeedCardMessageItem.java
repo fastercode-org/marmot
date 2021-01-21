@@ -1,5 +1,8 @@
 package org.fastercode.marmot.alarm.dingtalk.ding.message;
 
+/**
+ * @author harold
+ */
 public class FeedCardMessageItem {
     private String title;
     private String picURL;

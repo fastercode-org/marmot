@@ -8,6 +8,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author harold
+ */
 public class ActionCardMessage implements Message {
     public static final int MAX_ACTION_BUTTON_CNT = 5;
     public static final int MIN_ACTION_BUTTON_CNT = 1;
@@ -76,6 +79,7 @@ public class ActionCardMessage implements Message {
         actions.add(action);
     }
 
+    @Override
     public String toJsonString() {
 
         Map<String, Object> items = new HashMap<String, Object>();

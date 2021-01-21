@@ -6,6 +6,9 @@ import com.google.common.base.Strings;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @author harold
+ */
 public class SingleTargetActionCardMessage implements Message {
     private String title;
 
@@ -75,6 +78,7 @@ public class SingleTargetActionCardMessage implements Message {
     }
 
 
+    @Override
     public String toJsonString() {
         Map<String, Object> items = new HashMap<String, Object>();
         items.put("msgtype", "actionCard");

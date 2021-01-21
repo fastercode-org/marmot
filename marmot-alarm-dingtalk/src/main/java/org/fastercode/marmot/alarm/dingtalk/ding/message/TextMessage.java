@@ -8,6 +8,9 @@ import java.util.List;
 import java.util.Map;
 
 
+/**
+ * @author harold
+ */
 public class TextMessage implements Message {
 
     private String text;
@@ -42,6 +45,7 @@ public class TextMessage implements Message {
         this.isAtAll = isAtAll;
     }
 
+    @Override
     public String toJsonString() {
         Map<String, Object> items = new HashMap<String, Object>();
         items.put("msgtype", "text");
