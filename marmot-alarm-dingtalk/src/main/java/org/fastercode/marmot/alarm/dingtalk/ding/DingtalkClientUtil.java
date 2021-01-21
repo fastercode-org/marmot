@@ -23,7 +23,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class DingtalkClientUtil {
 
-    public static class HttpInstance {
+    private static class HttpInstance {
         private static final PoolingHttpClientConnectionManager CONNECTION_MANAGER = new PoolingHttpClientConnectionManager();
 
         static {
@@ -31,15 +31,15 @@ public class DingtalkClientUtil {
             CONNECTION_MANAGER.setDefaultMaxPerRoute(10);
         }
 
-        public static final HttpClient DEFAULT_CLIENT = HttpClients.custom()
+        private static final HttpClient DEFAULT_CLIENT = HttpClients.custom()
                 .setConnectionManager(CONNECTION_MANAGER)
                 .setConnectionManagerShared(false)
                 .evictIdleConnections(10, TimeUnit.SECONDS)
                 .build();
     }
 
-    public static class OkHttpInstance {
-        public static final OkHttpClient DEFAULT_CLIENT = new OkHttpClient().newBuilder()
+    private static class OkHttpInstance {
+        private static final OkHttpClient DEFAULT_CLIENT = new OkHttpClient().newBuilder()
                 .connectionPool(new ConnectionPool(10, 3, TimeUnit.MINUTES))
                 .retryOnConnectionFailure(true)
                 .hostnameVerifier((hostname, session) -> true)
