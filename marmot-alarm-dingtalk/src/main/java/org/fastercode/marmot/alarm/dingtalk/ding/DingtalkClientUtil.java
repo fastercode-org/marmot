@@ -49,6 +49,14 @@ public class DingtalkClientUtil {
                 .build();
     }
 
+    /**
+     * Send to Dingtalk via 'org.apache.http.client'
+     *
+     * @param webhook    dingtalk url
+     * @param message    message
+     * @param httpClient httpClient
+     * @return SendResult
+     */
     public static SendResult send(final String webhook, final Message message, HttpClient httpClient) throws IOException {
         httpClient = httpClient != null ? httpClient : HttpInstance.DEFAULT_CLIENT;
 
@@ -71,6 +79,14 @@ public class DingtalkClientUtil {
         return sendResult;
     }
 
+    /**
+     * Send to Dingtalk via 'okhttp3'
+     *
+     * @param webhook      dingtalk url
+     * @param message      message
+     * @param okHttpClient okHttpClient
+     * @return SendResult
+     */
     public static SendResult send(final String webhook, final Message message, OkHttpClient okHttpClient) throws IOException {
         okHttpClient = okHttpClient != null ? okHttpClient : OkHttpInstance.DEFAULT_CLIENT;
         Request request = new Request.Builder()
@@ -101,6 +117,13 @@ public class DingtalkClientUtil {
         return sendResult;
     }
 
+    /**
+     * Send to Dingtalk
+     *
+     * @param webhook dingtalk url
+     * @param message message
+     * @return SendResult
+     */
     public static SendResult send(final String webhook, final Message message) throws IOException {
         return send(webhook, message, OkHttpInstance.DEFAULT_CLIENT);
     }
