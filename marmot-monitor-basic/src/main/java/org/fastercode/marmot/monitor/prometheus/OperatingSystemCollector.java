@@ -3,11 +3,13 @@ package org.fastercode.marmot.monitor.prometheus;
 import com.codahale.metrics.Gauge;
 import com.codahale.metrics.Metric;
 import com.google.common.collect.Sets;
-import io.prometheus.client.Collector;
 import io.prometheus.client.GaugeMetricFamily;
 import org.fastercode.marmot.monitor.metrics.OperatingSystemGaugeSet;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 /**
@@ -25,8 +27,8 @@ public class OperatingSystemCollector extends BaseCollector {
         List<MetricFamilySamples> mfs = new ArrayList<>();
 
         try {
-            GaugeMetricFamily info = new GaugeMetricFamily("MarmotOs_info", "", Arrays.asList("arch", "name", "version"));
-            info.addMetric(Arrays.asList(
+            GaugeMetricFamily info = new GaugeMetricFamily("MarmotOs_info", "", labelNames("arch", "name", "version"));
+            info.addMetric(labelValues(
                     ((Gauge) gaugeSet.getMetrics().get("arch")).getValue().toString(),
                     ((Gauge) gaugeSet.getMetrics().get("name")).getValue().toString(),
                     ((Gauge) gaugeSet.getMetrics().get("version")).getValue().toString()
@@ -42,11 +44,11 @@ public class OperatingSystemCollector extends BaseCollector {
                     continue;
                 }
                 Gauge v = (Gauge) entry.getValue();
-                GaugeMetricFamily mf = new GaugeMetricFamily("MarmotOs_" + REPLACE_CHART.matcher(entry.getKey()).replaceAll("_"), "", Arrays.asList("name", "value"));
+                GaugeMetricFamily mf = new GaugeMetricFamily("MarmotOs_" + REPLACE_CHART.matcher(entry.getKey()).replaceAll("_"), "", labelNames("name", "value"));
                 if (!(v.getValue() instanceof Double)) {
-                    mf.addMetric(Arrays.asList(entry.getKey(), String.valueOf(v.getValue())), (long) v.getValue());
+                    mf.addMetric(labelValues(entry.getKey(), String.valueOf(v.getValue())), (long) v.getValue());
                 } else {
-                    mf.addMetric(Arrays.asList(entry.getKey(), String.valueOf(v.getValue())), (double) v.getValue());
+                    mf.addMetric(labelValues(entry.getKey(), String.valueOf(v.getValue())), (double) v.getValue());
                 }
                 mfs.add(mf);
             } catch (Exception ignore) {
