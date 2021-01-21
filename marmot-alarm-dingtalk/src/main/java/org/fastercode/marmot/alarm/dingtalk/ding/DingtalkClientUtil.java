@@ -1,6 +1,7 @@
 package org.fastercode.marmot.alarm.dingtalk.ding;
 
 import com.alibaba.fastjson.JSONObject;
+import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
@@ -12,6 +13,7 @@ import org.apache.http.util.EntityUtils;
 import org.fastercode.marmot.alarm.dingtalk.ding.message.Message;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -24,7 +26,7 @@ public class DingtalkClientUtil {
 
         static {
             CONNECTION_MANAGER.setMaxTotal(50);
-            CONNECTION_MANAGER.setDefaultMaxPerRoute(2);
+            CONNECTION_MANAGER.setDefaultMaxPerRoute(5);
         }
 
         private static final HttpClient DEFAULT_CLIENT = HttpClients.custom()
@@ -38,9 +40,8 @@ public class DingtalkClientUtil {
         httpClient = httpClient != null ? httpClient : HttpInstance.DEFAULT_CLIENT;
 
         HttpPost httppost = new HttpPost(webhook);
-        httppost.addHeader("Content-Type", "application/json; charset=utf-8");
-        StringEntity se = new StringEntity(message.toJsonString(), "utf-8");
-        httppost.setEntity(se);
+        httppost.addHeader(HttpHeaders.CONTENT_TYPE, "application/json; charset=utf-8");
+        httppost.setEntity(new StringEntity(message.toJsonString(), StandardCharsets.UTF_8));
 
         HttpResponse response = httpClient.execute(httppost);
 

@@ -18,13 +18,14 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.TimeUnit;
 
 public class HttpUtil {
     private static final Logger logger = LoggerFactory.getLogger(HttpUtil.class);
 
     private static final String CONTENT_TYPE_JSON = "application/json; charset=utf-8";
-    private static final Charset CHARSET_UTF8 = Charset.forName("UTF-8");
+    private static final Charset CHARSET_UTF8 = StandardCharsets.UTF_8;
 
     private final CloseableHttpClient httpClient;
 
@@ -38,8 +39,8 @@ public class HttpUtil {
 
     private HttpUtil() {
         PoolingHttpClientConnectionManager poolingHttpClientConnectionManager = new PoolingHttpClientConnectionManager();
-        poolingHttpClientConnectionManager.setMaxTotal(100); //池子总大小
-        poolingHttpClientConnectionManager.setDefaultMaxPerRoute(20); //路由到主机的池大小
+        poolingHttpClientConnectionManager.setMaxTotal(50);
+        poolingHttpClientConnectionManager.setDefaultMaxPerRoute(5);
 
         httpClient = HttpClientBuilder.create().setConnectionManager(poolingHttpClientConnectionManager)
                 .setDefaultRequestConfig(RequestConfig.custom()
