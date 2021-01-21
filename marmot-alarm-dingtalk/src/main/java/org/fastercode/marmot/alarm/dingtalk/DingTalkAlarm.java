@@ -2,7 +2,7 @@ package org.fastercode.marmot.alarm.dingtalk;
 
 import com.google.common.base.Strings;
 import lombok.extern.slf4j.Slf4j;
-import org.fastercode.marmot.alarm.dingtalk.ding.DingtalkChatbotClient;
+import org.fastercode.marmot.alarm.dingtalk.ding.DingtalkClientUtil;
 import org.fastercode.marmot.alarm.dingtalk.ding.message.MarkdownMessage;
 import org.fastercode.marmot.alarm.dingtalk.properties.AlarmDingtalkProperties;
 import org.fastercode.marmot.alarm.dingtalk.properties.AlarmDingtalkPropertyKey;
@@ -78,7 +78,7 @@ public class DingTalkAlarm implements AlarmHook {
             MarkdownMessage message = new MarkdownMessage();
             message.setTitle(title);
             message.add(markdownString.toString());
-            DingtalkChatbotClient.send(url, message);
+            DingtalkClientUtil.send(url, message);
         } catch (Exception e) {
             log.warn("DingTalkAlarm has error [{}]", e.getMessage(), e);
         }
