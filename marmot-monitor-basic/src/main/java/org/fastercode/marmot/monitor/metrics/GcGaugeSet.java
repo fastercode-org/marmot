@@ -14,6 +14,8 @@ import static com.codahale.metrics.MetricRegistry.name;
 
 /**
  * A set of gauges for the counts and elapsed times of garbage collections.
+ *
+ * @author huyaolong
  */
 public class GcGaugeSet implements MetricSet {
     private static final Set<String> FULL_GC_NAME = Sets.newHashSet("ConcurrentMarkSweep", "MarkSweepCompact", "PS MarkSweep", "G1 Old Generation",
