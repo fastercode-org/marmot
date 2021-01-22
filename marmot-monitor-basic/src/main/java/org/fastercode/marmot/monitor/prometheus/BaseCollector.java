@@ -18,35 +18,32 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 public abstract class BaseCollector extends Collector {
     private static final Collection<String> IP = IpUtil.getAllNoLoopbackAddresses();
-    private static final int START_POS = 3;
+    private static final String[] LABEL_NAME_ARRAY = new String[]{"project", "env"};
 
     protected List<String> labelNames(String... strings) {
-        String[] elements = new String[START_POS + strings.length];
-        elements[0] = "project";
-        elements[1] = "env";
-        elements[2] = "ip";
-        System.arraycopy(strings, 0, elements, START_POS, strings.length);
+        String[] elements = new String[LABEL_NAME_ARRAY.length + strings.length];
+        System.arraycopy(LABEL_NAME_ARRAY, 0, elements, 0, LABEL_NAME_ARRAY.length);
+        System.arraycopy(strings, 0, elements, LABEL_NAME_ARRAY.length, strings.length);
         return Arrays.asList(elements);
     }
 
     protected List<String> labelValues(String... strings) {
-        String[] elements = new String[START_POS + strings.length];
-        elements[0] = project();
-        elements[1] = env();
-        elements[2] = ip();
-        System.arraycopy(strings, 0, elements, START_POS, strings.length);
+        String[] values = new String[]{project(), env()};
+        String[] elements = new String[LABEL_NAME_ARRAY.length + strings.length];
+        System.arraycopy(values, 0, elements, 0, values.length);
+        System.arraycopy(strings, 0, elements, LABEL_NAME_ARRAY.length, strings.length);
         return Arrays.asList(elements);
     }
 
-    private String project() {
+    private static String project() {
         return CoreProperties.get(CorePropertyKey.PROJECT);
     }
 
-    private String env() {
+    private static String env() {
         return CoreProperties.get(CorePropertyKey.ENV);
     }
 
-    private String ip() {
+    private static String ip() {
         if (IP == null || IP.size() == 0) {
             return "null";
         }
