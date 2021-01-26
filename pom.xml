@@ -4,14 +4,13 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.fastercode.marmot</groupId>
+    <groupId>org.fastercode</groupId>
     <artifactId>marmot</artifactId>
     <packaging>pom</packaging>
     <version>1.0.1-SNAPSHOT</version>
     <modules>
         <module>marmot-core</module>
         <module>marmot-alarm-dingtalk</module>
-        <module>marmot-alarm-email</module>
         <module>marmot-monitor-basic</module>
     </modules>
 
