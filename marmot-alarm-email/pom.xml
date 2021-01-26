@@ -17,7 +17,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.fastercode.marmot</groupId>
+            <groupId>org.fastercode</groupId>
             <artifactId>marmot-core</artifactId>
         </dependency>
         <dependency>

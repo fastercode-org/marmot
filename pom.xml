@@ -73,18 +73,18 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>org.fastercode.marmot</groupId>
+                <groupId>org.fastercode</groupId>
                 <artifactId>marmot-core</artifactId>
                 <version>${version}</version>
             </dependency>
             <dependency>
-                <groupId>org.fastercode.marmot</groupId>
+                <groupId>org.fastercode</groupId>
                 <artifactId>marmot-alarm-dingtalk</artifactId>
                 <version>${version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
-                <groupId>org.fastercode.marmot</groupId>
+                <groupId>org.fastercode</groupId>
                 <artifactId>marmot-alarm-email</artifactId>
                 <version>${version}</version>
                 <scope>test</scope>

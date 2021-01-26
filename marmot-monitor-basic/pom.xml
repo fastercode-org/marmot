@@ -17,7 +17,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.fastercode.marmot</groupId>
+            <groupId>org.fastercode</groupId>
             <artifactId>marmot-core</artifactId>
         </dependency>
         <dependency>
@@ -50,13 +50,8 @@
 
         <!-- test dependency -->
         <dependency>
-            <groupId>org.fastercode.marmot</groupId>
+            <groupId>org.fastercode</groupId>
             <artifactId>marmot-alarm-dingtalk</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.fastercode.marmot</groupId>
-            <artifactId>marmot-alarm-email</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
