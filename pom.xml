@@ -7,7 +7,7 @@
     <groupId>org.fastercode.marmot</groupId>
     <artifactId>marmot</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.1</version>
+    <version>1.0.2-SNAPSHOT</version>
     <modules>
         <module>marmot-core</module>
         <module>marmot-alarm-dingtalk</module>
