@@ -2,6 +2,7 @@ package org.fastercode.marmot.monitor.prometheus;
 
 import io.prometheus.client.CollectorRegistry;
 import lombok.SneakyThrows;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,6 +89,7 @@ public class SpringBootHttpTest {
     protected MockMvc mvc;
 
     @Test
+    @Ignore
     @SneakyThrows
     public void test() {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
