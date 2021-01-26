@@ -32,6 +32,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 @Slf4j
+@Ignore
 public class KafkaAppenderTest {
     private static final Logger logKafka = LoggerFactory.getLogger("SEND-TO-KAFKA");
 
