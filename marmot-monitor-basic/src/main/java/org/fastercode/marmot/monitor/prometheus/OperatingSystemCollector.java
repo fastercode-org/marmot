@@ -44,11 +44,11 @@ public class OperatingSystemCollector extends BaseCollector {
                     continue;
                 }
                 Gauge v = (Gauge) entry.getValue();
-                GaugeMetricFamily mf = new GaugeMetricFamily("MarmotOs_" + REPLACE_CHART.matcher(entry.getKey()).replaceAll("_"), "", labelNames("name", "value"));
+                GaugeMetricFamily mf = new GaugeMetricFamily("MarmotOs_" + REPLACE_CHART.matcher(entry.getKey()).replaceAll("_"), "", labelNames("name"));
                 if (!(v.getValue() instanceof Double)) {
-                    mf.addMetric(labelValues(entry.getKey(), String.valueOf(v.getValue())), (long) v.getValue());
+                    mf.addMetric(labelValues(entry.getKey()), (long) v.getValue());
                 } else {
-                    mf.addMetric(labelValues(entry.getKey(), String.valueOf(v.getValue())), (double) v.getValue());
+                    mf.addMetric(labelValues(entry.getKey()), (double) v.getValue());
                 }
                 mfs.add(mf);
             } catch (Exception ignore) {

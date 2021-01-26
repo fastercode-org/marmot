@@ -31,22 +31,22 @@ public class ThreadStatesCollector extends BaseCollector {
                     continue;
                 }
                 if ("total_started.count".equals(entry.getKey())) {
-                    CounterMetricFamily mf = new CounterMetricFamily("MarmotThreadStates_" + REPLACE_CHART.matcher(entry.getKey()).replaceAll("_"), "", labelNames("name", "value"));
+                    CounterMetricFamily mf = new CounterMetricFamily("MarmotThreadStates_" + REPLACE_CHART.matcher(entry.getKey()).replaceAll("_"), "", labelNames("name"));
                     Object v = ((Gauge<?>) entry.getValue()).getValue();
-                    mf.addMetric(labelValues(entry.getKey(), String.valueOf(v)), (long) v);
+                    mf.addMetric(labelValues(entry.getKey()), (long) v);
                     mfs.add(mf);
                     continue;
                 }
 
                 Gauge v = (Gauge) entry.getValue();
-                GaugeMetricFamily mf = new GaugeMetricFamily("MarmotThreadStates_" + REPLACE_CHART.matcher(entry.getKey()).replaceAll("_"), "", labelNames("name", "value"));
+                GaugeMetricFamily mf = new GaugeMetricFamily("MarmotThreadStates_" + REPLACE_CHART.matcher(entry.getKey()).replaceAll("_"), "", labelNames("name"));
 
                 if (v.getValue() instanceof Collection) {
                     for (Object o : (Collection<?>) v.getValue()) {
-                        mf.addMetric(labelValues(entry.getKey(), String.valueOf(o)), 1);
+                        mf.addMetric(labelValues(entry.getKey()), 1);
                     }
                 } else {
-                    mf.addMetric(labelValues(entry.getKey(), String.valueOf(v.getValue())), (long) v.getValue());
+                    mf.addMetric(labelValues(entry.getKey()), (long) v.getValue());
                 }
 
                 mfs.add(mf);

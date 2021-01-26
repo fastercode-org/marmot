@@ -31,19 +31,19 @@ public class RuntimeCollector extends BaseCollector {
                     continue;
                 }
                 if ("uptime".equals(entry.getKey())) {
-                    CounterMetricFamily mf = new CounterMetricFamily("MarmotRuntime_" + REPLACE_CHART.matcher(entry.getKey()).replaceAll("_"), "", labelNames("name", "value"));
+                    CounterMetricFamily mf = new CounterMetricFamily("MarmotRuntime_" + REPLACE_CHART.matcher(entry.getKey()).replaceAll("_"), "", labelNames("name"));
                     Object v = ((Gauge<?>) entry.getValue()).getValue();
-                    mf.addMetric(labelValues(entry.getKey(), String.valueOf(v)), (long) v);
+                    mf.addMetric(labelValues(entry.getKey()), (long) v);
                     mfs.add(mf);
                     continue;
                 }
 
                 Gauge v = (Gauge) entry.getValue();
-                GaugeMetricFamily mf = new GaugeMetricFamily("MarmotRuntime_" + REPLACE_CHART.matcher(entry.getKey()).replaceAll("_"), "", labelNames("name", "value"));
+                GaugeMetricFamily mf = new GaugeMetricFamily("MarmotRuntime_" + REPLACE_CHART.matcher(entry.getKey()).replaceAll("_"), "", labelNames("name"));
 
                 if (v.getValue() instanceof Collection) {
                     for (Object o : (Collection<?>) v.getValue()) {
-                        mf.addMetric(labelValues(entry.getKey(), String.valueOf(o)), 1);
+                        mf.addMetric(labelValues(entry.getKey()), 1);
                     }
 
                 } else {
@@ -51,7 +51,7 @@ public class RuntimeCollector extends BaseCollector {
                     if (v.getValue() instanceof Long) {
                         val = (long) v.getValue();
                     }
-                    mf.addMetric(labelValues(entry.getKey(), String.valueOf(((Gauge<?>) entry.getValue()).getValue())), val);
+                    mf.addMetric(labelValues(entry.getKey()), val);
                 }
 
                 mfs.add(mf);
