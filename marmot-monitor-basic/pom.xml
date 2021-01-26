@@ -5,8 +5,8 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <artifactId>marmot</artifactId>
-        <groupId>org.fastercode</groupId>
-        <version>1.0.1-SNAPSHOT</version>
+        <groupId>org.fastercode.marmot</groupId>
+        <version>1.0.1</version>
     </parent>
 
     <artifactId>marmot-monitor-basic</artifactId>
@@ -17,7 +17,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.fastercode</groupId>
+            <groupId>org.fastercode.marmot</groupId>
             <artifactId>marmot-core</artifactId>
         </dependency>
         <dependency>
@@ -50,8 +50,13 @@
 
         <!-- test dependency -->
         <dependency>
-            <groupId>org.fastercode</groupId>
+            <groupId>org.fastercode.marmot</groupId>
             <artifactId>marmot-alarm-dingtalk</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.fastercode.marmot</groupId>
+            <artifactId>marmot-alarm-email</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>

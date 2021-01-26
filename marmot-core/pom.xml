@@ -6,8 +6,8 @@
 
     <parent>
         <artifactId>marmot</artifactId>
-        <groupId>org.fastercode</groupId>
-        <version>1.0.1-SNAPSHOT</version>
+        <groupId>org.fastercode.marmot</groupId>
+        <version>1.0.1</version>
     </parent>
 
     <artifactId>marmot-core</artifactId>
