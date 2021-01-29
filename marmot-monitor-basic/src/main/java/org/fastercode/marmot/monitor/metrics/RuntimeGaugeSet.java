@@ -33,6 +33,7 @@ public class RuntimeGaugeSet implements MetricSet {
     public RuntimeGaugeSet(RuntimeMXBean runtime) {
         this.runtime = runtime;
         try {
+            /*
             Map<String, String> properties = new HashMap<>(runtime.getSystemProperties());
             // remove too many characters
             properties.remove("java.class.path");
@@ -43,8 +44,9 @@ public class RuntimeGaugeSet implements MetricSet {
             for (Map.Entry<String, String> entry : properties.entrySet()) {
                 systemProperties.add(entry.getKey() + "=" + entry.getValue());
             }
+             */
         } catch (Exception ignore) {
-            // sikip
+            // skip
         }
     }
 
@@ -63,7 +65,7 @@ public class RuntimeGaugeSet implements MetricSet {
         gauges.put("start.timestamp", (Gauge<Long>) runtime::getStartTime);
         gauges.put("start.date", (Gauge<String>) () -> (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS Z")).format(new Date(runtime.getStartTime())));
 
-        gauges.put("properties", (Gauge<Set<String>>) () -> systemProperties);
+        // gauges.put("properties", (Gauge<Set<String>>) () -> systemProperties);
         gauges.put("arguments", (Gauge<List<String>>) runtime::getInputArguments);
         gauges.put("library.path", (Gauge<String>) runtime::getLibraryPath);
 
