@@ -31,9 +31,9 @@ public class RuntimeCollector extends BaseCollector {
                     continue;
                 }
                 if ("uptime".equals(entry.getKey())) {
-                    CounterMetricFamily mf = new CounterMetricFamily("MarmotRuntime_" + REPLACE_CHART.matcher(entry.getKey()).replaceAll("_"), "", labelNames("name", "value"));
+                    CounterMetricFamily mf = new CounterMetricFamily("MarmotRuntime_" + REPLACE_CHART.matcher(entry.getKey()).replaceAll("_"), "", labelNames("name"));
                     Object v = ((Gauge<?>) entry.getValue()).getValue();
-                    mf.addMetric(labelValues(entry.getKey(), String.valueOf(v)), (long) v);
+                    mf.addMetric(labelValues(entry.getKey()), (long) v);
                     mfs.add(mf);
                     continue;
                 }
