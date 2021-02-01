@@ -4,6 +4,7 @@ import com.codahale.metrics.Gauge;
 import com.codahale.metrics.Metric;
 import com.codahale.metrics.MetricSet;
 import com.codahale.metrics.RatioGauge;
+import com.google.common.base.Strings;
 
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;
@@ -72,7 +73,7 @@ public class MemoryGaugeSet implements MetricSet {
         });
 
         for (final MemoryPoolMXBean pool : memoryPools) {
-            final String poolName = name("pools", WHITESPACE.matcher(pool.getName()).replaceAll("-"));
+            final String poolName = name("pools", WHITESPACE.matcher(getNameSkipGcType(pool.getName())).replaceAll("-"));
 
             gauges.put(name(poolName, "usage"), new RatioGauge() {
                 @Override
@@ -98,4 +99,20 @@ public class MemoryGaugeSet implements MetricSet {
 
         return Collections.unmodifiableMap(gauges);
     }
+
+    private static String getNameSkipGcType(String name) {
+        if (Strings.isNullOrEmpty(name)) {
+            return name;
+        }
+        int spacePos;
+        if ((spacePos = name.indexOf(' ')) > -1) {
+            String nextWord = name.substring(spacePos + 1);
+            if (nextWord.startsWith("Eden") || nextWord.startsWith("Survivor") || nextWord.startsWith("Old")
+            ) {
+                return nextWord;
+            }
+        }
+        return name;
+    }
+
 }
