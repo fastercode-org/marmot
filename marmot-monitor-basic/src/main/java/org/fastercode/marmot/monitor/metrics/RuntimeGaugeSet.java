@@ -52,7 +52,7 @@ public class RuntimeGaugeSet implements MetricSet {
 
     @Override
     public Map<String, Metric> getMetrics() {
-        final Map<String, Metric> gauges = new HashMap<>();
+        final Map<String, Metric> gauges = new HashMap<>(8);
 
         gauges.put("jvm.vendor", (Gauge<String>) () -> String.format(Locale.US,
                 "%s %s %s (%s)",

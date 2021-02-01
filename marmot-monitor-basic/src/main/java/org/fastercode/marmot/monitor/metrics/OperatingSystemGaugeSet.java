@@ -45,7 +45,7 @@ public class OperatingSystemGaugeSet implements MetricSet {
 
     @Override
     public Map<String, Metric> getMetrics() {
-        Map<String, Metric> gauges = new HashMap<>();
+        Map<String, Metric> gauges = new HashMap<>(32);
         if (unixOperatingSystemMXBeanExists && os instanceof com.sun.management.UnixOperatingSystemMXBean) {
             final com.sun.management.UnixOperatingSystemMXBean unixOs = (com.sun.management.UnixOperatingSystemMXBean) os;
             gauges.put("fd.open", (Gauge<Long>) unixOs::getOpenFileDescriptorCount);

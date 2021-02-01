@@ -26,11 +26,12 @@ public class GcCollector extends BaseCollector {
     @Override
     public List<MetricFamilySamples> collect() {
         List<MetricFamilySamples> mfs = new ArrayList<>();
+        Map<String, Metric> metricsMap = gaugeSet.getMetrics();
 
         GaugeMetricFamily gc_group_count = new GaugeMetricFamily("MarmotGc_span_count_group", "", labelNames("name"));
         try {
-            long ygcCount = (long) ((Gauge) gaugeSet.getMetrics().get("span.ygc.count")).getValue();
-            long fgcCount = (long) ((Gauge) gaugeSet.getMetrics().get("span.fgc.count")).getValue();
+            long ygcCount = (long) ((Gauge) metricsMap.get("span.ygc.count")).getValue();
+            long fgcCount = (long) ((Gauge) metricsMap.get("span.fgc.count")).getValue();
             spanGcCache.put("span.ygc.count", ygcCount);
             spanGcCache.put("span.fgc.count", fgcCount);
             gc_group_count.addMetric(labelValues("span.ygc.count"), ygcCount);
@@ -42,8 +43,8 @@ public class GcCollector extends BaseCollector {
 
         GaugeMetricFamily gc_group_time = new GaugeMetricFamily("MarmotGc_span_time_group", "", labelNames("name"));
         try {
-            long ygcTime = (long) ((Gauge) gaugeSet.getMetrics().get("span.ygc.time")).getValue();
-            long fgcTime = (long) ((Gauge) gaugeSet.getMetrics().get("span.fgc.time")).getValue();
+            long ygcTime = (long) ((Gauge) metricsMap.get("span.ygc.time")).getValue();
+            long fgcTime = (long) ((Gauge) metricsMap.get("span.fgc.time")).getValue();
             spanGcCache.put("span.ygc.time", ygcTime);
             spanGcCache.put("span.fgc.time", fgcTime);
             gc_group_time.addMetric(labelValues("span.ygc.time"), ygcTime);
@@ -53,7 +54,7 @@ public class GcCollector extends BaseCollector {
             // skip
         }
 
-        for (Map.Entry<String, Metric> entry : gaugeSet.getMetrics().entrySet()) {
+        for (Map.Entry<String, Metric> entry : metricsMap.entrySet()) {
             try {
                 Gauge v = (Gauge) entry.getValue();
                 if (entry.getKey().startsWith("span.")) {

@@ -25,20 +25,21 @@ public class OperatingSystemCollector extends BaseCollector {
     @Override
     public List<MetricFamilySamples> collect() {
         List<MetricFamilySamples> mfs = new ArrayList<>();
+        Map<String, Metric> metricsMap = gaugeSet.getMetrics();
 
         try {
             GaugeMetricFamily info = new GaugeMetricFamily("MarmotOs_info", "", labelNames("arch", "name", "version"));
             info.addMetric(labelValues(
-                    ((Gauge) gaugeSet.getMetrics().get("arch")).getValue().toString(),
-                    ((Gauge) gaugeSet.getMetrics().get("name")).getValue().toString(),
-                    ((Gauge) gaugeSet.getMetrics().get("version")).getValue().toString()
+                    ((Gauge) metricsMap.get("arch")).getValue().toString(),
+                    ((Gauge) metricsMap.get("name")).getValue().toString(),
+                    ((Gauge) metricsMap.get("version")).getValue().toString()
             ), 1L);
             mfs.add(info);
         } catch (Exception ignore) {
             // skip
         }
 
-        for (Map.Entry<String, Metric> entry : gaugeSet.getMetrics().entrySet()) {
+        for (Map.Entry<String, Metric> entry : metricsMap.entrySet()) {
             try {
                 if (!(entry.getValue() instanceof Gauge) || STRING_KEYS.contains(entry.getKey())) {
                     continue;
